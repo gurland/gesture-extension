@@ -9,28 +9,19 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 chrome.runtime.onMessage.addListener(
-  (message: string, sender, sendResponse) => {
+  async (message: string, sender, sendResponse) => {
     console.log(message);
 
-    chrome.windows.getLastFocused(
-      // Without this, window.tabs is not populated.
-      { populate: true },
-      function (window) {
-        var foundSelected = false;
-        for (var i = 0; i < window.tabs.length; i++) {
-          // Finding the selected tab.
-          if (window.tabs[i].active) {
-            foundSelected = true;
-          }
-          // Finding the next tab.
-          else if (foundSelected) {
-            // Selecting the next tab.
-            chrome.tabs.update(window.tabs[i].id, { active: true });
-            return;
-          }
-        }
-      },
-    );
+    let queryOptions = { active: true, lastFocusedWindow: true };
+    // `tab` will either be a `tabs.Tab` instance or `undefined`.
+    let [tab] = await chrome.tabs.query(queryOptions);
+    console.log(tab);
+    // await chrome.tabs.move(tab.id, { index: 0 });
+
+    const s = await chrome.tabs.query({});
+
+    console.log(s);
+    return tab;
   },
 );
 
