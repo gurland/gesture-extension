@@ -5,7 +5,14 @@ import * as handpose from '@tensorflow-models/handpose';
 import '@tensorflow/tfjs-backend-webgl';
 // @ts-ignore
 import { GestureEstimator } from 'fingerpose';
-import { PaperGesture, RockGesture, ScissorsGesture } from './gestures';
+import {
+  PaperGesture,
+  RockGesture,
+  ScissorsGesture,
+  fingerRockGest,
+  fingerUpGest,
+  ok,
+} from './gestures';
 
 // @ts-ignore
 let handposeModel, gestureEstimator;
@@ -58,9 +65,6 @@ document.getElementById('start').addEventListener('click', () => {
                 );
 
                 console.log(gestureResult.name);
-                if (gestureResult.name === 'rock') {
-                  await chrome.runtime.sendMessage('test');
-                }
               }
             }
           }, 2000);
@@ -80,7 +84,14 @@ document.getElementById('start').addEventListener('click', () => {
 });
 
 const init = async () => {
-  const knownGestures = [RockGesture, PaperGesture, ScissorsGesture];
+  const knownGestures = [
+    RockGesture,
+    PaperGesture,
+    ScissorsGesture,
+    fingerUpGest,
+    fingerRockGest,
+    ok,
+  ];
   gestureEstimator = new GestureEstimator(knownGestures);
   console.log(
     'Initialized FingerPose with ' + knownGestures.length + ' gestures',
